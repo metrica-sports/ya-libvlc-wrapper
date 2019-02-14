@@ -99,5 +99,21 @@ float playback::get_fps()
     if( !_player.is_open() )
         return 0;
 
-    return libvlc_media_player_get_fps( _player.get_mp() );
+    float fps = libvlc_media_player_get_fps( _player.get_mp() );
+    if( fps <= 0.0f ) {
+        libvlc_media_track_t** tracks = nullptr;
+        libvlc_media_t* media = libvlc_media_player_get_media( _player.get_mp() );
+        libvlc_media_parse( media );
+
+        int nTracks = libvlc_media_tracks_get( media, &tracks );
+        for( int i = 0; i < nTracks; ++i ) {
+            const libvlc_media_track_t* track = tracks[i];
+            if( libvlc_track_video == track->i_type && track->video->i_frame_rate_den > 0 ) {
+                fps = track->video->i_frame_rate_num / static_cast<float>(track->video->i_frame_rate_den);
+                break;
+            }
+        }
+    }
+
+    return fps;
 }
