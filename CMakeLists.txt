@@ -21,8 +21,8 @@ if( MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8 )
 else()
     find_library( LIBVLC_LIBRARY NAMES vlc libvlc
         HINTS "$ENV{LIBVLC_LIBRARY_PATH}"
+              "${CMAKE_CURRENT_SOURCE_DIR}/libvlc-sdk/lib/macos/"
               "${CMAKE_CURRENT_SOURCE_DIR}/libvlc-sdk/lib/msvc/"
-        PATHS  "/Applications/VLC.app/Contents/MacOS/lib"
         )
 endif()
 
